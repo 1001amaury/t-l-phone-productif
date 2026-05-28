@@ -14,13 +14,10 @@
     --border: rgba(255,255,255,0.08);
     --border-hi: rgba(255,255,255,0.20);
     --radius: 16px;
-    --accent: #ffffff;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
-
   body {
     background: var(--bg);
     color: var(--fg);
@@ -31,9 +28,113 @@
     overflow-x: hidden;
   }
 
-  /* HERO */
+  /* ── HEADER ── */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(10,10,10,0.96);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 56px;
+  }
+  .header-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 48px);
+  }
+  .burger {
+    width: 36px;
+    height: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background .2s;
+  }
+  .burger:hover { background: rgba(255,255,255,0.07); }
+  .burger span {
+    display: block;
+    width: 16px;
+    height: 1.5px;
+    background: var(--fg);
+    border-radius: 2px;
+    transition: all .3s ease;
+  }
+  .burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; }
+  .burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* ── MENU DRAWER ── */
+  .drawer {
+    position: fixed;
+    top: 56px;
+    right: 0;
+    width: min(280px, 85vw);
+    height: calc(100vh - 56px);
+    background: #0f0f0f;
+    border-left: 1px solid var(--border);
+    z-index: 199;
+    transform: translateX(100%);
+    transition: transform .35s cubic-bezier(.25,1,.5,1);
+    overflow-y: auto;
+    padding: 12px 0 40px;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-overlay {
+    position: fixed;
+    inset: 0;
+    top: 56px;
+    background: rgba(0,0,0,.6);
+    z-index: 198;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s;
+  }
+  .drawer-overlay.open { opacity: 1; pointer-events: all; }
+  .drawer-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .2s, background .2s;
+    border-bottom: 1px solid var(--border);
+  }
+  .drawer-item:hover { color: var(--fg); background: var(--card); }
+  .drawer-item .num {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.25);
+    min-width: 24px;
+  }
+  .drawer-special {
+    color: var(--fg);
+    border-top: 1px solid var(--border-hi);
+    margin-top: 8px;
+  }
+
+  /* ── HERO ── */
   .hero {
-    padding: 60px 24px 40px;
+    padding: 52px 24px 44px;
     text-align: center;
     border-bottom: 1px solid var(--border);
     position: relative;
@@ -42,137 +143,111 @@
   .hero::before {
     content: '';
     position: absolute;
-    top: -80px; left: 50%; transform: translateX(-50%);
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+    top: -100px; left: 50%; transform: translateX(-50%);
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(255,255,255,0.035) 0%, transparent 65%);
     pointer-events: none;
   }
-  .hero-tag {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    padding: 5px 14px;
-    border-radius: 100px;
-    margin-bottom: 20px;
-  }
   .hero h1 {
-    font-size: clamp(26px, 7vw, 42px);
+    font-size: clamp(24px, 6.5vw, 40px);
     font-weight: 900;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    margin-bottom: 16px;
-    background: linear-gradient(180deg, #fff 0%, #888 100%);
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    margin-bottom: 14px;
+    background: linear-gradient(175deg, #fff 30%, #666 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .hero p {
     color: var(--muted);
-    font-size: 14px;
-    max-width: 340px;
-    margin: 0 auto 28px;
-  }
-  .hero-stat {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 28px;
-    gap: 4px;
-  }
-  .hero-stat strong {
-    font-size: 32px;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-  }
-  .hero-stat span {
-    font-size: 11px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    font-size: 13px;
+    max-width: 300px;
+    margin: 0 auto;
+    line-height: 1.6;
   }
 
-  /* NAV PILLS */
-  .nav-wrap {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(10,10,10,0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 16px;
-  }
-  .nav-pills {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  .nav-pills::-webkit-scrollbar { display: none; }
-  .pill {
-    flex-shrink: 0;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 7px 14px;
-    border-radius: 100px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all .25s ease;
-    white-space: nowrap;
-    text-decoration: none;
-  }
-  .pill:hover, .pill.active {
-    background: var(--fg);
-    color: var(--bg);
-    border-color: var(--fg);
-  }
-
-  /* SECTIONS */
+  /* ── SECTIONS ── */
   .section {
-    padding: 40px 20px;
+    padding: 44px 20px;
     border-bottom: 1px solid var(--border);
-    max-width: 600px;
+    max-width: 580px;
     margin: 0 auto;
   }
   .section-num {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 8px;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 6px;
   }
   .section h2 {
-    font-size: clamp(20px, 5vw, 28px);
+    font-size: clamp(22px, 5.5vw, 32px);
     font-weight: 900;
-    letter-spacing: -0.02em;
-    margin-bottom: 20px;
-    line-height: 1.2;
+    letter-spacing: -0.025em;
+    margin-bottom: 22px;
+    line-height: 1.15;
   }
   .section p {
     color: var(--muted);
     margin-bottom: 14px;
     font-size: 14px;
+    line-height: 1.7;
   }
   .section p:last-child { margin-bottom: 0; }
 
-  /* CARDS */
+  /* ── LISTE ── */
+  .liste {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 20px;
+  }
+  .liste li {
+    display: flex;
+    gap: 0;
+    font-size: 14px;
+    color: var(--muted);
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: baseline;
+    line-height: 1.5;
+  }
+  .liste li:last-child { border-bottom: none; }
+  .liste li .arr {
+    color: var(--fg);
+    flex-shrink: 0;
+    font-weight: 900;
+    margin-right: 14px;
+    font-size: 13px;
+    margin-top: 1px;
+  }
+  .liste li strong { color: var(--fg); }
+
+  /* ── BOX ── */
+  .box {
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .box-warn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: var(--muted);
+  }
+  .box-warn strong { color: var(--fg); }
+
+  /* ── CARDS ── */
   .card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 18px;
     margin-bottom: 12px;
-    transition: border-color .3s ease;
   }
   .card:hover { border-color: var(--border-hi); }
   .card-title {
@@ -181,55 +256,14 @@
     margin-bottom: 8px;
     color: var(--fg);
   }
-  .card p {
-    font-size: 13px;
-    margin-bottom: 0;
-  }
+  .card p { font-size: 13px; margin-bottom: 0; }
 
-  /* WARN / TIP BOX */
-  .box {
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    margin-bottom: 16px;
-    font-size: 13px;
-  }
-  .box-warn {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: var(--muted);
-  }
-  .box-warn strong { color: var(--fg); }
-
-  /* LISTE */
-  .liste {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .liste li {
-    display: flex;
-    gap: 12px;
-    font-size: 13px;
-    color: var(--muted);
-    align-items: flex-start;
-  }
-  .liste li::before {
-    content: '→';
-    color: var(--fg);
-    flex-shrink: 0;
-    margin-top: 1px;
-    font-weight: 700;
-  }
-  .liste li strong { color: var(--fg); }
-
-  /* IA TABLE */
+  /* ── IA GRID ── */
   .ia-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
   .ia-item {
     background: var(--card);
@@ -237,20 +271,11 @@
     border-radius: 12px;
     padding: 12px 14px;
   }
-  .ia-item .tool {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--fg);
-    margin-bottom: 4px;
-  }
-  .ia-item .use {
-    font-size: 11px;
-    color: var(--muted);
-    line-height: 1.5;
-  }
+  .ia-item .tool { font-size: 13px; font-weight: 700; color: var(--fg); margin-bottom: 4px; }
+  .ia-item .use { font-size: 11px; color: var(--muted); line-height: 1.5; }
 
-  /* WIDGET ACCORDION */
-  .widget-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  /* ── WIDGET ACCORDION ── */
+  .widget-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
   .widget-item {
     background: var(--card);
     border: 1px solid var(--border);
@@ -261,30 +286,37 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 16px;
+    padding: 15px 16px;
     cursor: pointer;
     gap: 12px;
     user-select: none;
   }
   .widget-header:hover { background: rgba(255,255,255,0.02); }
   .widget-title { font-size: 13px; font-weight: 700; color: var(--fg); }
-  .widget-chevron {
-    font-size: 12px;
-    color: var(--muted);
-    transition: transform .3s ease;
-    flex-shrink: 0;
-  }
+  .widget-chevron { font-size: 11px; color: var(--muted); transition: transform .3s ease; flex-shrink: 0; }
   .widget-item.open .widget-chevron { transform: rotate(180deg); }
-  .widget-body {
-    display: none;
-    padding: 0 16px 16px;
-  }
+  .widget-body { display: none; padding: 0 16px 18px; }
   .widget-item.open .widget-body { display: block; }
-  .widget-desc {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 12px;
+  .widget-desc { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.6; }
+
+  /* Widget duo card */
+  .widget-duo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
   }
+  .widget-mini {
+    background: #111;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .widget-mini strong { color: var(--fg); display: block; margin-bottom: 4px; font-size: 12px; }
+
   pre {
     background: #111;
     border: 1px solid var(--border);
@@ -297,13 +329,13 @@
     font-family: 'Courier New', monospace;
     white-space: pre-wrap;
     word-break: break-all;
+    margin-bottom: 8px;
   }
   .copy-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-top: 10px;
-    background: rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.06);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 7px 14px;
@@ -312,11 +344,13 @@
     color: var(--fg);
     cursor: pointer;
     transition: background .2s;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 16px;
   }
-  .copy-btn:hover { background: rgba(255,255,255,0.12); }
-  .copy-btn.copied { color: #a0ffa0; border-color: #a0ffa030; }
+  .copy-btn:hover { background: rgba(255,255,255,0.10); }
+  .copy-btn.copied { color: #7dffb0; }
 
-  /* APPS ECOSYSTEM */
+  /* ── APP GRID ── */
   .app-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -334,59 +368,48 @@
   .app-name { font-size: 13px; font-weight: 700; margin-bottom: 5px; }
   .app-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
 
-  /* AI COACH SECTION */
+  /* ── AI COACH ── */
   .ai-section {
     background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
     border: 1px solid var(--border-hi);
     border-radius: 20px;
     padding: 28px 20px;
-    margin: 40px 20px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
+    max-width: 580px;
   }
   .ai-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
-  .ai-badge::before {
-    content: '✦';
-    color: var(--fg);
-  }
+  .ai-badge::before { content: '✦'; color: var(--fg); }
   .ai-section h2 {
     font-size: 22px;
     font-weight: 900;
     letter-spacing: -0.02em;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   .ai-section > p {
     font-size: 13px;
     color: var(--muted);
     margin-bottom: 24px;
+    line-height: 1.6;
   }
 
   /* QUIZ */
   .quiz-step { display: none; }
   .quiz-step.active { display: block; }
-  .quiz-q {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    line-height: 1.4;
-  }
-  .quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
+  .quiz-progress { display: flex; gap: 4px; margin-bottom: 20px; }
+  .quiz-dot { flex: 1; height: 2px; border-radius: 2px; background: var(--border); transition: background .3s; }
+  .quiz-dot.done { background: var(--fg); }
+  .quiz-q { font-size: 15px; font-weight: 700; margin-bottom: 16px; line-height: 1.4; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
   .quiz-opt {
     background: var(--card);
     border: 1px solid var(--border);
@@ -401,47 +424,41 @@
     font-weight: 600;
   }
   .quiz-opt:hover { border-color: var(--border-hi); color: var(--fg); }
-  .quiz-opt.selected {
-    border-color: var(--fg);
-    color: var(--fg);
-    background: rgba(255,255,255,0.06);
-  }
-  .quiz-progress {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 20px;
-  }
-  .quiz-dot {
-    flex: 1;
-    height: 3px;
-    border-radius: 2px;
-    background: var(--border);
-    transition: background .3s;
-  }
-  .quiz-dot.done { background: var(--fg); }
+  .quiz-opt.selected { border-color: var(--fg); color: var(--fg); background: rgba(255,255,255,0.06); }
 
   .btn-primary {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
     background: var(--fg);
     color: var(--bg);
     font-family: 'Montserrat', sans-serif;
     font-size: 13px;
     font-weight: 800;
-    padding: 13px 24px;
+    padding: 14px 24px;
     border-radius: 100px;
     border: none;
     cursor: pointer;
-    transition: opacity .2s, transform .2s;
-    letter-spacing: 0.02em;
     width: 100%;
+    transition: opacity .2s, transform .15s;
+    letter-spacing: 0.02em;
   }
-  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
-  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-primary:hover { opacity: .85; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: .35; cursor: not-allowed; transform: none; }
 
-  /* AI RESULT */
+  .ai-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 16px;
+  }
+  .ai-loading .dots span { animation: dotPulse 1.2s infinite; font-size: 18px; }
+  .ai-loading .dots span:nth-child(2) { animation-delay: .2s; }
+  .ai-loading .dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes dotPulse { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
+
   .ai-result {
     display: none;
     background: #111;
@@ -452,14 +469,12 @@
     font-size: 13px;
     line-height: 1.8;
     color: var(--muted);
-    min-height: 80px;
   }
   .ai-result.visible { display: block; }
   .ai-result strong { color: var(--fg); }
   .typing-cursor {
     display: inline-block;
-    width: 2px;
-    height: 14px;
+    width: 2px; height: 14px;
     background: var(--fg);
     margin-left: 2px;
     animation: blink 1s infinite;
@@ -467,101 +482,86 @@
   }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  .ai-loading {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 16px;
-  }
-  .ai-loading .dots span {
-    animation: dotPulse 1.2s infinite;
-    font-size: 18px;
-    line-height: 1;
-  }
-  .ai-loading .dots span:nth-child(2) { animation-delay: .2s; }
-  .ai-loading .dots span:nth-child(3) { animation-delay: .4s; }
-  @keyframes dotPulse { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
-
-  /* FOOTER */
+  /* ── FOOTER ── */
   .footer {
     padding: 40px 24px;
     text-align: center;
     color: var(--muted);
     font-size: 12px;
     border-top: 1px solid var(--border);
-    max-width: 600px;
+    max-width: 580px;
     margin: 0 auto;
   }
   .footer strong { color: var(--fg); }
 
-  /* SCROLL REVEAL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity .5s ease, transform .5s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── SECTION WRAPPER (pour padding AI) ── */
+  .section-wrap {
+    padding: 44px 20px;
+    border-bottom: 1px solid var(--border);
   }
 
-  @media (max-width: 380px) {
+  @media (max-width: 360px) {
     .ia-grid, .app-grid { grid-template-columns: 1fr; }
+    .widget-duo { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
+<div class="header">
+  <div class="header-title">Le système en 9 étapes</div>
+  <div class="burger" id="burgerBtn" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
+<!-- DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
+<nav class="drawer" id="drawer">
+  <a class="drawer-item" href="#blocages" onclick="closeMenu()"><span class="num">01</span> Blocages</a>
+  <a class="drawer-item" href="#ia" onclick="closeMenu()"><span class="num">02</span> Intelligence Artificielle</a>
+  <a class="drawer-item" href="#musique" onclick="closeMenu()"><span class="num">03</span> Musique & Contenu</a>
+  <a class="drawer-item" href="#widgets" onclick="closeMenu()"><span class="num">04</span> Widgets Scriptable</a>
+  <a class="drawer-item" href="#systeme" onclick="closeMenu()"><span class="num">05</span> Homepage & Système</a>
+  <a class="drawer-item" href="#ecosysteme" onclick="closeMenu()"><span class="num">06</span> Écosystème d'apps</a>
+  <a class="drawer-item" href="#todo" onclick="closeMenu()"><span class="num">07</span> Todo & Planification</a>
+  <a class="drawer-item" href="#off" onclick="closeMenu()"><span class="num">08</span> Moments off programmés</a>
+  <a class="drawer-item" href="#creer" onclick="closeMenu()"><span class="num">09</span> Créer</a>
+  <a class="drawer-item drawer-special" href="#coach" onclick="closeMenu()"><span class="num">✦</span> Coach IA</a>
+</nav>
+
 <!-- HERO -->
 <div class="hero reveal" id="top">
-  <div class="hero-tag">Le système en 9 étapes</div>
   <h1>Transformer son téléphone en machine de productivité</h1>
-  <p>Tu perds 29 ans de ta vie si tu as 4h11 d'écran par jour. Voilà comment retourner ça en ta faveur.</p>
-  <div class="hero-stat">
-    <strong>29 ans</strong>
-    <span>perdus à 4h11/jour</span>
-  </div>
+  <p>Tu perds 29 ans de ta vie si tu as 4h11 d'écran par jour. Voilà comment retourner ça en ta faveur — en 9 étapes.</p>
 </div>
 
-<!-- NAV -->
-<div class="nav-wrap">
-  <div class="nav-pills">
-    <a class="pill active" href="#blocages">1 Blocages</a>
-    <a class="pill" href="#ia">2 IA</a>
-    <a class="pill" href="#musique">3 Musique</a>
-    <a class="pill" href="#widgets">4 Widgets</a>
-    <a class="pill" href="#systeme">5 Système</a>
-    <a class="pill" href="#ecosysteme">6 Écosystème</a>
-    <a class="pill" href="#todo">7 Todo</a>
-    <a class="pill" href="#off">8 Moments off</a>
-    <a class="pill" href="#creer">9 Créer</a>
-    <a class="pill" href="#coach">✦ Coach IA</a>
-  </div>
-</div>
-
-<!-- ÉTAPE 1 : BLOCAGES -->
+<!-- ÉTAPE 1 -->
 <div class="section reveal" id="blocages">
   <div class="section-num">Étape 01</div>
   <h2>Blocages</h2>
 
-  <div class="box box-warn">
-    <strong>Ce que personne ne te dit :</strong> les blocages trop extrêmes ne marchent pas. Quand TikTok est limité à 45min, tu vas les "renta" au max. Effet de rebond garanti — exactement comme une dopamine detox.
+  <div class="box box-warn" style="margin-bottom:20px;">
+    <strong>Ce que personne ne te dit :</strong> les blocages trop extrêmes ne marchent pas. Quand TikTok est limité à 45 min, tu vas les "renta" au max. C'est l'effet de rebond — exactement comme une dopamine detox.
   </div>
 
-  <p style="color:var(--fg); font-weight:700; font-size:13px; margin-bottom:10px;">La bonne approche : blocages programmés</p>
+  <p style="color:var(--fg); font-weight:700; font-size:14px; margin-bottom:4px;">La bonne approche : blocages programmés</p>
   <p>Pas de limites de temps. Des plages horaires bloquées. Tu veux pas te retrouver sans accès à Insta quand t'en as vraiment besoin.</p>
 
   <ul class="liste">
-    <li><strong>Moments stratégiques :</strong> nuit, sortie des cours, matin, sport, quality time</li>
-    <li><strong>Incontournables :</strong> la nuit — TOUT sauf les apps vitales</li>
-    <li><strong>À bloquer :</strong> Instagram, TikTok, YouTube (distractions)</li>
-    <li><strong>Pas trop extrême :</strong> garder Insta visible sur la homepage — sinon la FOMO crée encore plus d'envie</li>
+    <li><span class="arr">→</span><span><strong>Moments stratégiques :</strong>&nbsp; nuit, sortie des cours, matin, sport, quality time</span></li>
+    <li><span class="arr">→</span><span><strong>Incontournables :</strong>&nbsp; la nuit — TOUT sauf les apps vitales</span></li>
+    <li><span class="arr">→</span><span><strong>À bloquer :</strong>&nbsp; Instagram, TikTok, YouTube (distractions)</span></li>
+    <li><span class="arr">→</span><span><strong>Pas trop extrême :</strong>&nbsp; garder Insta visible sur la homepage — sinon la FOMO crée encore plus d'envie</span></li>
   </ul>
 </div>
 
-<!-- ÉTAPE 2 : IA -->
+<!-- ÉTAPE 2 -->
 <div class="section reveal" id="ia">
   <div class="section-num">Étape 02</div>
   <h2>Intelligence Artificielle</h2>
@@ -587,12 +587,12 @@
     </div>
   </div>
 
-  <p style="color:var(--fg); font-weight:700; font-size:13px; margin-bottom:10px;">Automatismes à adopter</p>
+  <p style="color:var(--fg); font-weight:700; font-size:14px; margin-bottom:4px;">Automatismes à adopter</p>
   <ul class="liste">
-    <li>Donne toujours du contexte — mauvais résultat = mauvais prompt</li>
-    <li>Utilise les connecteurs pour trier tes mails, organiser tes fichiers</li>
-    <li>Cherche les tâches répétitives dans ta vie et demande à l'IA de les faire</li>
-    <li>Claude peut coder n'importe quoi — un site, un bot, un widget — et l'exporter en image</li>
+    <li><span class="arr">→</span><span>Donne toujours du contexte — mauvais résultat = mauvais prompt</span></li>
+    <li><span class="arr">→</span><span>Utilise les connecteurs pour trier tes mails, organiser tes fichiers</span></li>
+    <li><span class="arr">→</span><span>Cherche les tâches répétitives dans ta vie et demande à l'IA de les faire</span></li>
+    <li><span class="arr">→</span><span>Claude peut coder n'importe quoi — un site, un bot, un widget — et l'exporter en image</span></li>
   </ul>
 
   <div class="box box-warn">
@@ -600,7 +600,7 @@
   </div>
 </div>
 
-<!-- ÉTAPE 3 : MUSIQUE -->
+<!-- ÉTAPE 3 -->
 <div class="section reveal" id="musique">
   <div class="section-num">Étape 03</div>
   <h2>Musique & Contenu</h2>
@@ -609,16 +609,16 @@
 
   <div class="card">
     <div class="card-title">🎵 Tes playlists</div>
-    <p>Supprime toutes les musiques tristes. Épingle les playlists positives. Construis une playlist spéciale "quand ça va pas" — uniquement avec de la musique qui boost. La musique a un impact énorme sur ton inconscient, ne sous-estime jamais ça.</p>
+    <p>Supprime toutes les musiques tristes. Épingle les playlists positives. Construis une playlist "quand ça va pas" — uniquement avec de la musique qui boost. La musique a un impact énorme sur ton inconscient.</p>
   </div>
 
   <div class="card">
     <div class="card-title">📱 Le contenu que tu regardes</div>
-    <p>Fais en sorte que la majorité de ce que tu regardes t'éduque, t'apprenne quelque chose, ou soit en rapport avec une passion. On s'interdit pas tout divertissement — mais on fait en sorte que ça soit aligné avec là où on veut aller.</p>
+    <p>Fais en sorte que la majorité de ce que tu regardes t'éduque ou soit en rapport avec une passion. On s'interdit pas tout divertissement — mais on fait en sorte que ça soit aligné avec là où on veut aller.</p>
   </div>
 </div>
 
-<!-- ÉTAPE 4 : WIDGETS -->
+<!-- ÉTAPE 4 -->
 <div class="section reveal" id="widgets">
   <div class="section-num">Étape 04</div>
   <h2>Widgets Scriptable</h2>
@@ -627,13 +627,14 @@
 
   <div class="widget-list">
 
+    <!-- W1 : Heures restantes -->
     <div class="widget-item" id="w1">
       <div class="widget-header" onclick="toggleWidget('w1')">
         <div class="widget-title">⏱ Heures restantes dans l'année</div>
         <div class="widget-chevron">▼</div>
       </div>
       <div class="widget-body">
-        <div class="widget-desc">Affiche en temps réel combien d'heures il reste en 2025. Pour rester motivé.</div>
+        <div class="widget-desc">Affiche en temps réel combien d'heures il reste dans l'année. Pour rester motivé.</div>
         <pre id="code-w1">let now = new Date();
 let endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
 let diff = endOfYear - now;
@@ -641,8 +642,8 @@ let hoursLeft = Math.floor(diff / (1000 * 60 * 60));
 
 let widget = new ListWidget();
 widget.backgroundColor = new Color("#0F0F0F");
-
 widget.addSpacer();
+
 let text = widget.addText(`${hoursLeft}h`);
 text.textColor = new Color("#FFFFFF");
 text.font = Font.boldSystemFont(36);
@@ -655,15 +656,16 @@ Script.complete();</pre>
       </div>
     </div>
 
+    <!-- W2 : Jours de vie -->
     <div class="widget-item" id="w2">
       <div class="widget-header" onclick="toggleWidget('w2')">
-        <div class="widget-title">📅 Jours restants dans ta vie</div>
+        <div class="widget-title">📅 Jour de ton existence</div>
         <div class="widget-chevron">▼</div>
       </div>
       <div class="widget-body">
-        <div class="widget-desc">Affiche le numéro du jour de ton existence. Modifie ta date de naissance à la ligne 2.</div>
+        <div class="widget-desc">Affiche le numéro du jour de ta vie. Modifie ta date de naissance à la ligne 2 (mois 0-indexé : janvier = 0).</div>
         <pre id="code-w2">// Date de naissance — À MODIFIER
-let birthDate = new Date(2009, 6, 26); // mois 0-indexé (juillet = 6)
+let birthDate = new Date(2009, 6, 26);
 let today = new Date();
 
 let diffMs = today - birthDate;
@@ -671,7 +673,6 @@ let dayOfLife = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
 
 let widget = new ListWidget();
 widget.backgroundColor = new Color("#0F0F0F");
-
 widget.addSpacer();
 
 let main = widget.addText(`Jour ${dayOfLife}`);
@@ -685,93 +686,34 @@ sub.font = Font.systemFont(12);
 sub.centerAlignText();
 
 widget.addSpacer();
-
 Script.setWidget(widget);
 Script.complete();</pre>
         <button class="copy-btn" onclick="copyCode('code-w2', this)">📋 Copier le code</button>
       </div>
     </div>
 
+    <!-- W3+W4 : Programme (DUO) -->
     <div class="widget-item" id="w3">
       <div class="widget-header" onclick="toggleWidget('w3')">
-        <div class="widget-title">💪 Séance du jour</div>
+        <div class="widget-title">💪 Programme semaine + séance du jour</div>
         <div class="widget-chevron">▼</div>
       </div>
       <div class="widget-body">
-        <div class="widget-desc">Affiche ta séance d'entraînement du jour avec le détail des exercices. Donne ton programme à Claude pour qu'il l'adapte.</div>
-        <pre id="code-w3">const widget = new ListWidget()
-widget.backgroundColor = new Color("#ffffff")
-widget.setPadding(18, 18, 18, 18)
+        <div class="widget-desc">Ces deux widgets fonctionnent ensemble — place-les côte à côte sur ta homepage. L'un affiche ton programme de la semaine (lundi : tirage, mardi : run…), l'autre zoome sur la séance du jour avec le détail des exercices. Donne ton programme à Claude pour qu'il adapte les deux codes.</div>
 
-function customFont(name, size, fallback) {
-  try { return Font.custom(name, size) } catch { return fallback }
-}
+        <div class="widget-duo">
+          <div class="widget-mini">
+            <strong>Planning semaine</strong>
+            Tous les jours d'un coup d'œil — jour + séance associée.
+          </div>
+          <div class="widget-mini">
+            <strong>Séance du jour</strong>
+            Détail complet des exercices du jour automatiquement.
+          </div>
+        </div>
 
-const titleFont = customFont("Montserrat-Bold", 18, Font.boldSystemFont(18))
-const subFont = customFont("Montserrat-SemiBold", 16, Font.semiboldSystemFont(16))
-const textFont = customFont("Montserrat-Regular", 13, Font.systemFont(13))
-const black = new Color("#000")
-
-const daysFR = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"]
-const todayName = daysFR[new Date().getDay()]
-
-// MODIFIE CE TABLEAU AVEC TON PROGRAMME
-const sessions = {
-  "Lundi":    { name: "Dips lourd + renfo pull", detailsKey: "DipsLourd" },
-  "Mardi":    { name: "Run 10-15km + legs",       detailsKey: "Legs" },
-  "Mercredi": { name: "Repos",                    detailsKey: null },
-  "Jeudi":    { name: "Dips volume + renfo pull", detailsKey: "DipsVolume" },
-  "Vendredi": { name: "Run 9min + Parkour FFA",   detailsKey: null },
-  "Samedi":   { name: "Parkour LSC + Upper",      detailsKey: "Upper" },
-  "Dimanche": { name: "Long run + mobi/renfo",    detailsKey: null }
-}
-
-const details = {
-  "DipsLourd": ["Montée : 20-40-50-50","Dips 3×3-5 @50-65 (3min)","Tractions lestées 4×9-13","Rowing uni 4×8-12"],
-  "Legs": ["Pistols 4×8","Squat smith 4×8-12","Leg extensions 4×8-12","Mollets 4×8-12"],
-  "DipsVolume": ["Dips 2×3-5 @60kg (3min)","Dips 4×9-10 @40-50","Tractions lestées 4×9-13"],
-  "Upper": ["Tractions lestées 4×9-13","Barrel press 3×8-12","Tirage uni 4×8-12"]
-}
-
-const info = sessions[todayName]
-
-const t = widget.addText(todayName)
-t.font = titleFont
-t.textColor = black
-widget.addSpacer(8)
-
-const s = widget.addText(info.name)
-s.font = subFont
-s.textColor = black
-widget.addSpacer(10)
-
-if (info.detailsKey && details[info.detailsKey]) {
-  for (const line of details[info.detailsKey]) {
-    const txt = widget.addText("• " + line)
-    txt.font = textFont
-    txt.textColor = black
-    widget.addSpacer(3)
-  }
-}
-
-if (config.runsInWidget) {
-  Script.setWidget(widget)
-  Script.complete()
-} else {
-  await widget.presentMedium()
-}</pre>
-        <button class="copy-btn" onclick="copyCode('code-w3', this)">📋 Copier le code</button>
-      </div>
-    </div>
-
-    <div class="widget-item" id="w4">
-      <div class="widget-header" onclick="toggleWidget('w4')">
-        <div class="widget-title">🗓 Planning semaine</div>
-        <div class="widget-chevron">▼</div>
-      </div>
-      <div class="widget-body">
-        <div class="widget-desc">Affiche ton programme d'entraînement de la semaine d'un coup d'œil. Style noir sur blanc, Montserrat.</div>
-        <pre id="code-w4">const program = [
+        <p style="font-size:12px; color:var(--muted); margin-bottom:12px; font-weight:700;">Code — Planning semaine</p>
+        <pre id="code-w3">const program = [
   { day: "lundi",    work: "dips lourd + renfo pull" },
   { day: "mardi",    work: "run 10-15km + legs" },
   { day: "mercredi", work: "repos" },
@@ -813,17 +755,82 @@ if (config.runsInWidget) {
 } else {
   await widget.presentMedium();
 }</pre>
+        <button class="copy-btn" onclick="copyCode('code-w3', this)">📋 Copier le code</button>
+
+        <p style="font-size:12px; color:var(--muted); margin-bottom:12px; font-weight:700;">Code — Séance du jour</p>
+        <pre id="code-w4">const widget = new ListWidget()
+widget.backgroundColor = new Color("#ffffff")
+widget.setPadding(18, 18, 18, 18)
+
+function customFont(name, size, fallback) {
+  try { return Font.custom(name, size) } catch { return fallback }
+}
+
+const titleFont = customFont("Montserrat-Bold", 18, Font.boldSystemFont(18))
+const subFont = customFont("Montserrat-SemiBold", 16, Font.semiboldSystemFont(16))
+const textFont = customFont("Montserrat-Regular", 13, Font.systemFont(13))
+const black = new Color("#000")
+
+const daysFR = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"]
+const todayName = daysFR[new Date().getDay()]
+
+// MODIFIE AVEC TON PROGRAMME
+const sessions = {
+  "Lundi":    { name: "Dips lourd + renfo pull", detailsKey: "DipsLourd" },
+  "Mardi":    { name: "Run 10-15km + legs",       detailsKey: "Legs" },
+  "Mercredi": { name: "Repos",                    detailsKey: null },
+  "Jeudi":    { name: "Dips volume + renfo pull", detailsKey: "DipsVolume" },
+  "Vendredi": { name: "Run 9min + Parkour FFA",   detailsKey: null },
+  "Samedi":   { name: "Parkour LSC + Upper",      detailsKey: "Upper" },
+  "Dimanche": { name: "Long run + mobi/renfo",    detailsKey: null }
+}
+
+const details = {
+  "DipsLourd":  ["Montée : 20-40-50-50","Dips 3×3-5 @50-65 (3min)","Tractions lestées 4×9-13","Rowing uni 4×8-12","Facepull 4×8-12"],
+  "Legs":       ["Pistols 4×8","Squat smith 4×8-12","Leg extensions 4×8-12","Mollets 4×8-12"],
+  "DipsVolume": ["Dips 2×3-5 @60kg (3min)","Dips 4×9-10 @40-50","Tractions lestées 4×9-13","Rowing uni 4×8-12"],
+  "Upper":      ["Tractions lestées 4×9-13","Barrel press 3×8-12","Tirage uni 4×8-12","Dips légers tempo 3×8-12"]
+}
+
+const info = sessions[todayName]
+
+const t = widget.addText(todayName)
+t.font = titleFont
+t.textColor = black
+widget.addSpacer(8)
+
+const s = widget.addText(info.name)
+s.font = subFont
+s.textColor = black
+widget.addSpacer(10)
+
+if (info.detailsKey && details[info.detailsKey]) {
+  for (const line of details[info.detailsKey]) {
+    const txt = widget.addText("• " + line)
+    txt.font = textFont
+    txt.textColor = black
+    widget.addSpacer(3)
+  }
+}
+
+if (config.runsInWidget) {
+  Script.setWidget(widget)
+  Script.complete()
+} else {
+  await widget.presentMedium()
+}</pre>
         <button class="copy-btn" onclick="copyCode('code-w4', this)">📋 Copier le code</button>
       </div>
     </div>
 
+    <!-- W5 : % journée -->
     <div class="widget-item" id="w5">
       <div class="widget-header" onclick="toggleWidget('w5')">
         <div class="widget-title">📊 % de la journée restante</div>
         <div class="widget-chevron">▼</div>
       </div>
       <div class="widget-body">
-        <div class="widget-desc">Affiche le pourcentage de la journée qui reste. Brutal et efficace.</div>
+        <div class="widget-desc">Affiche le pourcentage de la journée qu'il reste. Brutal et efficace.</div>
         <pre id="code-w5">let now = new Date();
 let elapsedSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 let remainingSeconds = 86400 - elapsedSeconds;
@@ -851,21 +858,20 @@ Script.complete();</pre>
     </div>
 
   </div>
-
   <p style="font-size:13px; color:var(--muted)">D'autres idées : widget photo motivante, calendrier, batterie, météo. Donne n'importe quelle idée à Claude et il te code ça en 30 secondes.</p>
 </div>
 
-<!-- ÉTAPE 5 : SYSTÈME HOMEPAGE -->
+<!-- ÉTAPE 5 -->
 <div class="section reveal" id="systeme">
   <div class="section-num">Étape 05</div>
   <h2>Homepage & Système</h2>
 
   <ul class="liste">
-    <li><strong>Minimaliste :</strong> tout sur UNE page. Monochrome, noir et blanc. Pas de surcharge visuelle.</li>
-    <li><strong>Apps utiles devant :</strong> réfléchis à ce que tu utilises le plus. Le reste dégage.</li>
-    <li><strong>Wallpaper :</strong> soit une personne qui te motive, soit une photo qui te déterre, soit rien.</li>
-    <li><strong>Personnalise :</strong> Color Widget pour personnaliser tes widgets. Un texte sur ton lockscreen. En un regard tu es déterminé.</li>
-    <li><strong>Notifs :</strong> coupe tout ce qui est inutile. Chaque notif inutile = une stimulation pour rien.</li>
+    <li><span class="arr">→</span><span><strong>Minimaliste :</strong>&nbsp; tout sur UNE page. Monochrome, noir et blanc. Pas de surcharge visuelle.</span></li>
+    <li><span class="arr">→</span><span><strong>Apps utiles devant :</strong>&nbsp; réfléchis à ce que tu utilises le plus. Le reste dégage.</span></li>
+    <li><span class="arr">→</span><span><strong>Wallpaper :</strong>&nbsp; soit une personne qui te motive, soit une photo qui te déterre, soit rien.</span></li>
+    <li><span class="arr">→</span><span><strong>Personnalise :</strong>&nbsp; Color Widget pour personnaliser tes widgets. Un texte sur ton lockscreen. En un regard tu es déterminé.</span></li>
+    <li><span class="arr">→</span><span><strong>Notifs :</strong>&nbsp; coupe tout ce qui est inutile. Chaque notif inutile = une stimulation pour rien.</span></li>
   </ul>
 
   <div class="box box-warn">
@@ -873,7 +879,7 @@ Script.complete();</pre>
   </div>
 </div>
 
-<!-- ÉTAPE 6 : ÉCOSYSTÈME -->
+<!-- ÉTAPE 6 -->
 <div class="section reveal" id="ecosysteme">
   <div class="section-num">Étape 06</div>
   <h2>Écosystème d'apps</h2>
@@ -908,7 +914,7 @@ Script.complete();</pre>
   </div>
 </div>
 
-<!-- ÉTAPE 7 : TODO -->
+<!-- ÉTAPE 7 -->
 <div class="section reveal" id="todo">
   <div class="section-num">Étape 07</div>
   <h2>Todo & Planification</h2>
@@ -917,7 +923,7 @@ Script.complete();</pre>
 
   <div class="card">
     <div class="card-title">Le widget todo Notion</div>
-    <p>Fais ta todo sur Notion puis demande à Claude de te coder un widget Scriptable qui affiche ta todo list. Quand tu cliques dessus → tu arrives directement sur ta page Notion. Toujours une direction, toujours accessible.</p>
+    <p>Fais ta todo sur Notion puis demande à Claude de te coder un widget Scriptable qui l'affiche directement sur ta homepage. Quand tu cliques dessus → tu arrives directement sur ta page Notion. Toujours une direction, toujours accessible.</p>
   </div>
 
   <div class="box box-warn">
@@ -925,7 +931,7 @@ Script.complete();</pre>
   </div>
 </div>
 
-<!-- ÉTAPE 8 : MOMENTS OFF -->
+<!-- ÉTAPE 8 -->
 <div class="section reveal" id="off">
   <div class="section-num">Étape 08</div>
   <h2>Moments Off Programmés</h2>
@@ -933,10 +939,10 @@ Script.complete();</pre>
   <p>Transformer son téléphone, c'est aussi savoir le poser.</p>
 
   <ul class="liste">
-    <li>Réserve des plages dans ta semaine où le téléphone est <strong>complètement posé</strong></li>
-    <li>Balade sans téléphone. Sport sans musique. Moments de qualité avec les gens.</li>
-    <li>Le meilleur moment : <strong>le soir</strong> — pose ton téléphone hors de ta chambre ou loin du lit</li>
-    <li>20-30 minutes sans écran avant de dormir et après le réveil</li>
+    <li><span class="arr">→</span><span>Réserve des plages dans ta semaine où le téléphone est <strong>complètement posé</strong></span></li>
+    <li><span class="arr">→</span><span>Balade sans téléphone. Sport sans musique. Moments de qualité avec les gens.</span></li>
+    <li><span class="arr">→</span><span><strong>Le meilleur moment : le soir</strong> — pose ton téléphone hors de ta chambre ou loin du lit</span></li>
+    <li><span class="arr">→</span><span>20-30 minutes sans écran avant de dormir et après le réveil</span></li>
   </ul>
 
   <div class="box box-warn">
@@ -944,7 +950,7 @@ Script.complete();</pre>
   </div>
 </div>
 
-<!-- ÉTAPE 9 : CRÉER -->
+<!-- ÉTAPE 9 -->
 <div class="section reveal" id="creer">
   <div class="section-num">Étape 09</div>
   <h2>Créer</h2>
@@ -957,142 +963,132 @@ Script.complete();</pre>
   </div>
 
   <div class="box box-warn">
-    <strong>La vraie transformation :</strong> quand tu crées, ton cerveau est en mode "cherche". Une vidéo que t'aurais scrollée en 10 secondes, tu la regardes jusqu'au bout. Moi ça m'est arrivé des dizaines de fois — un truc que j'ai regardé en passant m'a inspiré 6 mois plus tard.
+    <strong>La vraie transformation :</strong> quand tu crées, ton cerveau est en mode "cherche". Une vidéo que t'aurais scrollée en 10 secondes, tu la regardes jusqu'au bout. Moi ça m'est arrivé des dizaines de fois — un truc que j'ai regardé en passant m'a inspiré 6 mois plus tard. C'est ça qui fait que même le temps que tu passes sur ton téléphone travaille pour toi.
   </div>
 
-  <p>C'est ça l'étape finale. Pas juste bloquer les distractions ou optimiser ta homepage — mais faire en sorte que même ce que tu consommes travaille pour toi.</p>
-
-  <p style="color:var(--fg); font-weight:700; font-size:13px; margin-bottom:10px;">Apps pour créer depuis ton téléphone</p>
+  <p style="color:var(--fg); font-weight:700; font-size:14px; margin-bottom:4px;">Apps pour créer depuis ton téléphone</p>
   <ul class="liste">
-    <li><strong>CapCut / Edits</strong> — montage vidéo</li>
-    <li><strong>Canva</strong> — visuels, stories, posts</li>
-    <li><strong>BandLab</strong> — musique</li>
-    <li>Ou juste un papier et un crayon. L'important c'est de créer.</li>
+    <li><span class="arr">→</span><span><strong>CapCut / Edits</strong> — montage vidéo</span></li>
+    <li><span class="arr">→</span><span><strong>Canva</strong> — visuels, stories, posts</span></li>
+    <li><span class="arr">→</span><span><strong>BandLab</strong> — musique</span></li>
+    <li><span class="arr">→</span><span>Ou juste un papier et un crayon. L'important c'est de créer.</span></li>
   </ul>
 </div>
 
 <!-- AI COACH -->
-<div class="ai-section reveal" id="coach">
-  <div class="ai-badge">Coach IA personnalisé</div>
-  <h2>Optimise ton téléphone</h2>
-  <p>Réponds à 4 questions et reçois un plan d'action personnalisé basé sur le système.</p>
+<div class="section-wrap reveal" id="coach-wrap">
+  <div class="ai-section" id="coach">
+    <div class="ai-badge">Coach IA personnalisé</div>
+    <h2>Optimise ton téléphone</h2>
+    <p>Réponds à 4 questions et reçois un plan d'action personnalisé basé sur le système.</p>
 
-  <div class="quiz-progress" id="quizProgress">
-    <div class="quiz-dot done" id="dot0"></div>
-    <div class="quiz-dot" id="dot1"></div>
-    <div class="quiz-dot" id="dot2"></div>
-    <div class="quiz-dot" id="dot3"></div>
-  </div>
-
-  <!-- Q1 -->
-  <div class="quiz-step active" id="q0">
-    <div class="quiz-q">C'est quoi ton plus gros problème avec ton téléphone ?</div>
-    <div class="quiz-options">
-      <button class="quiz-opt" onclick="selectOpt(0, this, 'Je scrolle sans m\'arrêter sur les réseaux')">Je scrolle sans m'arrêter sur les réseaux</button>
-      <button class="quiz-opt" onclick="selectOpt(0, this, 'Je procrastine sur mon téléphone au lieu de travailler')">Je procrastine au lieu de travailler</button>
-      <button class="quiz-opt" onclick="selectOpt(0, this, 'Je passe du temps dessus mais sans rien accomplir')">Je passe du temps dessus sans rien accomplir</button>
-      <button class="quiz-opt" onclick="selectOpt(0, this, 'Je suis tout le temps distrait par les notifications')">Je suis tout le temps distrait par les notifs</button>
+    <div class="quiz-progress" id="quizProgress">
+      <div class="quiz-dot done" id="dot0"></div>
+      <div class="quiz-dot" id="dot1"></div>
+      <div class="quiz-dot" id="dot2"></div>
+      <div class="quiz-dot" id="dot3"></div>
     </div>
-  </div>
 
-  <!-- Q2 -->
-  <div class="quiz-step" id="q1">
-    <div class="quiz-q">T'as déjà essayé quoi pour réduire ça ?</div>
-    <div class="quiz-options">
-      <button class="quiz-opt" onclick="selectOpt(1, this, 'Rien encore')">Rien encore</button>
-      <button class="quiz-opt" onclick="selectOpt(1, this, 'Des limites de temps sur les apps')">Des limites de temps sur les apps</button>
-      <button class="quiz-opt" onclick="selectOpt(1, this, 'Supprimer des apps')">Supprimer des apps</button>
-      <button class="quiz-opt" onclick="selectOpt(1, this, 'Dopamine detox ou défi sans réseaux')">Dopamine detox / défi sans réseaux</button>
+    <div class="quiz-step active" id="q0">
+      <div class="quiz-q">C'est quoi ton plus gros problème avec ton téléphone ?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="selectOpt(0, this, 'Je scrolle sans m\'arrêter sur les réseaux')">Je scrolle sans m'arrêter sur les réseaux</button>
+        <button class="quiz-opt" onclick="selectOpt(0, this, 'Je procrastine sur mon téléphone au lieu de travailler')">Je procrastine au lieu de travailler</button>
+        <button class="quiz-opt" onclick="selectOpt(0, this, 'Je passe du temps dessus mais sans rien accomplir')">Je passe du temps dessus sans rien accomplir</button>
+        <button class="quiz-opt" onclick="selectOpt(0, this, 'Je suis tout le temps distrait par les notifications')">Je suis tout le temps distrait par les notifs</button>
+      </div>
     </div>
-  </div>
 
-  <!-- Q3 -->
-  <div class="quiz-step" id="q2">
-    <div class="quiz-q">C'est quoi tes objectifs en ce moment ?</div>
-    <div class="quiz-options">
-      <button class="quiz-opt" onclick="selectOpt(2, this, 'Être plus productif pour mes études / travail')">Être plus productif pour mes études / travail</button>
-      <button class="quiz-opt" onclick="selectOpt(2, this, 'Créer du contenu ou un projet personnel')">Créer du contenu ou un projet perso</button>
-      <button class="quiz-opt" onclick="selectOpt(2, this, 'Mieux gérer mon temps et m\'organiser')">Mieux gérer mon temps et m'organiser</button>
-      <button class="quiz-opt" onclick="selectOpt(2, this, 'Réduire le stress et mieux dormir')">Réduire le stress et mieux dormir</button>
+    <div class="quiz-step" id="q1">
+      <div class="quiz-q">T'as déjà essayé quoi pour réduire ça ?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="selectOpt(1, this, 'Rien encore')">Rien encore</button>
+        <button class="quiz-opt" onclick="selectOpt(1, this, 'Des limites de temps sur les apps')">Des limites de temps sur les apps</button>
+        <button class="quiz-opt" onclick="selectOpt(1, this, 'Supprimer des apps')">Supprimer des apps</button>
+        <button class="quiz-opt" onclick="selectOpt(1, this, 'Dopamine detox ou défi sans réseaux')">Dopamine detox / défi sans réseaux</button>
+      </div>
     </div>
-  </div>
 
-  <!-- Q4 -->
-  <div class="quiz-step" id="q3">
-    <div class="quiz-q">T'as combien d'heures d'écran par jour en moyenne ?</div>
-    <div class="quiz-options">
-      <button class="quiz-opt" onclick="selectOpt(3, this, 'Moins de 2h')">Moins de 2h</button>
-      <button class="quiz-opt" onclick="selectOpt(3, this, 'Entre 2h et 4h')">Entre 2h et 4h</button>
-      <button class="quiz-opt" onclick="selectOpt(3, this, 'Entre 4h et 6h')">Entre 4h et 6h</button>
-      <button class="quiz-opt" onclick="selectOpt(3, this, 'Plus de 6h')">Plus de 6h</button>
+    <div class="quiz-step" id="q2">
+      <div class="quiz-q">C'est quoi tes objectifs en ce moment ?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="selectOpt(2, this, 'Être plus productif pour mes études ou mon travail')">Être plus productif pour mes études / travail</button>
+        <button class="quiz-opt" onclick="selectOpt(2, this, 'Créer du contenu ou un projet personnel')">Créer du contenu ou un projet perso</button>
+        <button class="quiz-opt" onclick="selectOpt(2, this, 'Mieux gérer mon temps et m\'organiser')">Mieux gérer mon temps et m'organiser</button>
+        <button class="quiz-opt" onclick="selectOpt(2, this, 'Réduire le stress et mieux dormir')">Réduire le stress et mieux dormir</button>
+      </div>
     </div>
+
+    <div class="quiz-step" id="q3">
+      <div class="quiz-q">T'as combien d'heures d'écran par jour en moyenne ?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="selectOpt(3, this, 'Moins de 2h')">Moins de 2h</button>
+        <button class="quiz-opt" onclick="selectOpt(3, this, 'Entre 2h et 4h')">Entre 2h et 4h</button>
+        <button class="quiz-opt" onclick="selectOpt(3, this, 'Entre 4h et 6h')">Entre 4h et 6h</button>
+        <button class="quiz-opt" onclick="selectOpt(3, this, 'Plus de 6h')">Plus de 6h</button>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="analyzeBtn" onclick="analyzeProfile()" disabled>Analyser mon profil →</button>
+
+    <div class="ai-loading" id="aiLoading" style="display:none">
+      Analyse en cours <div class="dots"><span>.</span><span>.</span><span>.</span></div>
+    </div>
+    <div class="ai-result" id="aiResult"></div>
   </div>
-
-  <button class="btn-primary" id="analyzeBtn" onclick="analyzeProfile()" disabled>Analyser mon profil →</button>
-
-  <div class="ai-loading" id="aiLoading" style="display:none">
-    Analyse en cours <div class="dots"><span>.</span><span>.</span><span>.</span></div>
-  </div>
-
-  <div class="ai-result" id="aiResult"></div>
 </div>
 
 <!-- FOOTER -->
 <div class="footer">
   <p>Basé sur la vidéo <strong>Comment transformer son téléphone en machine de productivité</strong></p>
-  <p style="margin-top:8px">@1001amaury</p>
+  <p style="margin-top:6px">@1001amaury</p>
 </div>
 
 <script>
-// NAV ACTIVE
-const sections = document.querySelectorAll('[id]');
-const pills = document.querySelectorAll('.pill');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => {
-    if (window.scrollY >= s.offsetTop - 80) current = s.id;
-  });
-  pills.forEach(p => {
-    p.classList.remove('active');
-    if (p.getAttribute('href') === '#' + current) p.classList.add('active');
-  });
-});
-
-// SCROLL REVEAL
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.08 });
-reveals.forEach(r => observer.observe(r));
-
-// WIDGET TOGGLE
-function toggleWidget(id) {
-  const el = document.getElementById(id);
-  el.classList.toggle('open');
+// ── MENU ──
+function toggleMenu() {
+  const b = document.getElementById('burgerBtn');
+  const d = document.getElementById('drawer');
+  const o = document.getElementById('drawerOverlay');
+  b.classList.toggle('open');
+  d.classList.toggle('open');
+  o.classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('burgerBtn').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
 }
 
-// COPY CODE
+// ── REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.06 });
+document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+
+// ── WIDGETS ──
+function toggleWidget(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// ── COPY ──
 function copyCode(id, btn) {
-  const code = document.getElementById(id).innerText;
-  navigator.clipboard.writeText(code).then(() => {
+  navigator.clipboard.writeText(document.getElementById(id).innerText).then(() => {
     btn.textContent = '✓ Copié !';
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = '📋 Copier le code'; btn.classList.remove('copied'); }, 2000);
   });
 }
 
-// QUIZ
+// ── QUIZ ──
 const answers = {};
 function selectOpt(qIndex, btn, value) {
-  const opts = btn.parentElement.querySelectorAll('.quiz-opt');
-  opts.forEach(o => o.classList.remove('selected'));
+  btn.parentElement.querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('selected'));
   btn.classList.add('selected');
   answers[qIndex] = value;
-
   setTimeout(() => {
-    const current = document.getElementById('q' + qIndex);
+    document.getElementById('q' + qIndex).classList.remove('active');
     const next = document.getElementById('q' + (qIndex + 1));
-    current.classList.remove('active');
     if (next) {
       next.classList.add('active');
       document.getElementById('dot' + (qIndex + 1)).classList.add('done');
@@ -1106,16 +1102,14 @@ async function analyzeProfile() {
   document.getElementById('analyzeBtn').style.display = 'none';
   document.getElementById('aiLoading').style.display = 'flex';
 
-  const prompt = `Tu es un coach en productivité mobile. 
+  const prompt = `Tu es un coach en productivité mobile.
 Un utilisateur a répondu à ce questionnaire :
 - Problème principal : ${answers[0]}
 - Ce qu'il a déjà essayé : ${answers[1]}
 - Ses objectifs : ${answers[2]}
 - Temps d'écran quotidien : ${answers[3]}
 
-Basé sur un système en 9 étapes (1-Blocages programmés, 2-IA, 3-Musique/contenu, 4-Widgets Scriptable, 5-Homepage minimaliste, 6-Écosystème d'apps, 7-Todo, 8-Moments off programmés, 9-Créer), donne-lui un plan d'action personnalisé et concis en français.
-
-Format : 3 à 4 recommandations prioritaires, chacune commençant par l'étape concernée en gras (ex: **Étape 1 :**). Sois direct, concret, sans intro ni conclusion. Maximum 200 mots. Pas de listes à puces, écris en phrases courtes.`;
+Basé sur un système en 9 étapes (1-Blocages programmés, 2-IA, 3-Musique/contenu, 4-Widgets Scriptable, 5-Homepage minimaliste, 6-Écosystème d'apps, 7-Todo, 8-Moments off programmés, 9-Créer), donne-lui un plan d'action personnalisé en français. Format : 3 à 4 recommandations prioritaires, chacune commençant par l'étape concernée en gras (ex: **Étape 1 :**). Sois direct, concret, sans intro ni conclusion. Maximum 200 mots. Phrases courtes.`;
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1134,31 +1128,24 @@ Format : 3 à 4 recommandations prioritaires, chacune commençant par l'étape c
     const resultEl = document.getElementById('aiResult');
     resultEl.classList.add('visible');
 
-    // Typewriter effect
     let i = 0;
-    const formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    const cursor = '<span class="typing-cursor"></span>';
-    resultEl.innerHTML = cursor;
-
-    // Stream char by char into raw text then render
-    const rawChars = text.split('');
+    const chars = text.split('');
     let displayed = '';
     const interval = setInterval(() => {
-      if (i >= rawChars.length) {
+      if (i >= chars.length) {
         clearInterval(interval);
-        resultEl.innerHTML = formatted;
+        resultEl.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         return;
       }
-      displayed += rawChars[i];
+      displayed += chars[i];
       resultEl.innerHTML = displayed.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') + '<span class="typing-cursor"></span>';
       i += 3;
-    }, 20);
-
+    }, 18);
   } catch(e) {
     document.getElementById('aiLoading').style.display = 'none';
     const resultEl = document.getElementById('aiResult');
     resultEl.classList.add('visible');
-    resultEl.innerHTML = 'Erreur de connexion. Vérifie ta connexion et réessaie.';
+    resultEl.textContent = 'Erreur de connexion. Vérifie ta connexion et réessaie.';
   }
 }
 </script>
